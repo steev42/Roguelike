@@ -7,6 +7,7 @@ public class GameData
     public const float DEFAULT_LIGHT = 4.0f;
 
     static Dictionary <Vector2, TileData> tileMap;
+    static Dictionary <CharacterData, GameObject> characterObjectMap;
 
     static List<LightSource> lightSources;
 
@@ -22,29 +23,6 @@ public class GameData
         //TODO Other conditions, like another creature in this tile?
         return false;
     }
-
-    /*static ActionTree initiativeTracker;
-
-	public static void EnqueueAction (ActionDefinition a)
-	{
-		if (initiativeTracker == null) {
-			initiativeTracker = new ActionTree (a);
-		} else {
-			initiativeTracker.EnqueueAction (a);
-		}
-			
-		PerformNextAction ();
-	}
-
-	public static void PerformNextAction ()
-	{
-		if (initiativeTracker == null) {
-			return;
-		} else {
-			ActionDefinition a = initiativeTracker.DequeueAction (null);
-			a.doAction ();
-		}
-	}*/
 
     public static void AddLightSource(LightSource l)
     {
@@ -102,4 +80,26 @@ public class GameData
     {
         return activeCharacter;
     }
+
+    public static GameObject GetActiveCharacterObject()
+    {
+        if (characterObjectMap == null || characterObjectMap.ContainsKey(activeCharacter) == false)
+        {
+            Debug.LogWarning("Requesting Character's GameObject when one doesn't exist.");
+            return null;
+        }
+        return characterObjectMap[activeCharacter];
+
+    }
+
+    public static void MapCharacterToObject(CharacterData cd, GameObject go)
+    {
+        if (characterObjectMap == null)
+        {
+            characterObjectMap = new Dictionary<CharacterData,GameObject>();
+        }
+        characterObjectMap[cd] = go;
+    }
+
+
 }
