@@ -4,94 +4,102 @@ using UnityEngine;
 
 public class GameData
 {
-	public const float DEFAULT_LIGHT = 4.0f;
+    public const float DEFAULT_LIGHT = 4.0f;
 
-	static Dictionary <Vector2, TileData> tileMap;
+    static Dictionary <Vector2, TileData> tileMap;
+    static Dictionary <CharacterData, GameObject> characterObjectMap;
 
-	static List<LightSource> lightSources;
+    static List<LightSource> lightSources;
 
-	static CharacterData activeCharacter;
+    static CharacterData activeCharacter;
 
-	public static bool isValidMove (Vector2 target)
-	{
-		if (GetTile (target).movementSpeedMultiplier != 0) {
-			return true;
-		}
-		//TODO Other conditions, like another creature in this tile?
-		return false;
-	}
+    public static bool isValidMove(Vector2 target)
+    {
+        TileData tile = GetTile(target);
+        if (tile != null && tile.movementSpeedMultiplier != 0)
+        {
+            return true;
+        }
+        //TODO Other conditions, like another creature in this tile?
+        return false;
+    }
 
-	/*static ActionTree initiativeTracker;
+    public static void AddLightSource(LightSource l)
+    {
+        if (lightSources == null)
+        {
+            lightSources = new List<LightSource>();
+        }
 
-	public static void EnqueueAction (ActionDefinition a)
-	{
-		if (initiativeTracker == null) {
-			initiativeTracker = new ActionTree (a);
-		} else {
-			initiativeTracker.EnqueueAction (a);
-		}
-			
-		PerformNextAction ();
-	}
+        lightSources.Add(l);
+    }
 
-	public static void PerformNextAction ()
-	{
-		if (initiativeTracker == null) {
-			return;
-		} else {
-			ActionDefinition a = initiativeTracker.DequeueAction (null);
-			a.doAction ();
-		}
-	}*/
+    public static List<LightSource> GetLightSources()
+    {
+        if (lightSources == null)
+        {
+            lightSources = new List<LightSource>();
+        }
+        return lightSources;
+    }
 
-	public static void AddLightSource (LightSource l)
-	{
-		if (lightSources == null) {
-			lightSources = new List<LightSource> ();
-		}
+    public static void SetTile(int x, int y, TileData td)
+    {
+        if (tileMap == null)
+        {
+            tileMap = new Dictionary<Vector2, TileData>();
+        }
 
-		lightSources.Add (l);
-	}
+        tileMap[new Vector2(x, y)] = td;
+    }
 
-	public static List<LightSource> GetLightSources ()
-	{
-		if (lightSources == null) {
-			lightSources = new List<LightSource> ();
-		}
-		return lightSources;
-	}
+    public static TileData GetTile(Vector2 tileCoord)
+    {
+        if (tileMap.ContainsKey(tileCoord))
+        {
+            return tileMap[tileCoord];
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-	public static void SetTile (int x, int y, TileData td)
-	{
-		if (tileMap == null) {
-			tileMap = new Dictionary<Vector2, TileData> ();
-		}
+    public static TileData GetTile(int x, int y)
+    {
+        Vector2 pos = new Vector2(x, y);
+        return GetTile(pos);
+    }
 
-		tileMap [new Vector2 (x, y)] = td;
-	}
+    public static void SetActiveCharacter(CharacterData activate)
+    {
+        activeCharacter = activate;
+    }
 
-	public static TileData GetTile (Vector2 tileCoord)
-	{
-		if (tileMap.ContainsKey (tileCoord)) {
-			return tileMap [tileCoord];
-		} else {
-			return null;
-		}
-	}
+    public static CharacterData GetActiveCharacter()
+    {
+        return activeCharacter;
+    }
 
-	public static TileData GetTile (int x, int y)
-	{
-		Vector2 pos = new Vector2 (x, y);
-		return GetTile (pos);
-	}
+    public static GameObject GetActiveCharacterObject()
+    {
+        if (characterObjectMap == null || characterObjectMap.ContainsKey(activeCharacter) == false)
+        {
+            Debug.LogWarning("Requesting Character's GameObject when one doesn't exist.");
+            return null;
+        }
+        return characterObjectMap[activeCharacter];
 
-	public static void SetActiveCharacter (CharacterData activate)
-	{
-		activeCharacter = activate;
-	}
+    }
 
-	public static CharacterData GetActiveCharacter ()
-	{
-		return activeCharacter;
-	}
+    public static void MapCharacterToObject(CharacterData cd, GameObject go)
+    {
+        if (characterObjectMap == null)
+        {
+            characterObjectMap = new Dictionary<CharacterData,GameObject>();
+        }
+        characterObjectMap[cd] = go;
+    }
+
+
 }

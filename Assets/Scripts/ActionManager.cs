@@ -40,7 +40,10 @@ public class ActionManager : MonoBehaviour
             {
                 a.DoAction();
                 currentTick = a.GetCompletionTick();
-                Debug.Log("Action completed at tick " + currentTick);
+                if (!(a is PauseAction))
+                {
+                    Debug.Log("Action" + a.GetType() + " completed at tick " + currentTick);
+                }
             }
             waiting = true;
             EnqueueAction(a.GetInitiatingAI().GetNextAction());
