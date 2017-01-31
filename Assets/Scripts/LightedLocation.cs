@@ -30,6 +30,10 @@ public class LightedLocation : MonoBehaviour
 
         lightLevel = 0f;
 
+        if (this.gameObject.GetComponent<SpriteRenderer>().isVisible == false)
+        {
+            return; // We're not even seen on camera.  Don't bother with the math.
+        }
 
         // Does the active character have line of sight to this location.  If not, let's not check the lights.
         if (CanSeeLight(activeCharacter.location, transform.position))
