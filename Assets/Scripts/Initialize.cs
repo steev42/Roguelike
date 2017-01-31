@@ -14,6 +14,8 @@ public class Initialize : MonoBehaviour
 
     public Sprite nuper_sprite;
 
+    public Texture2D mapImage;
+
     // Use this for initialization
     void Start()
     {
@@ -22,7 +24,7 @@ public class Initialize : MonoBehaviour
         temp.lightIntensity = 1;
         GameData.AddLightSource(temp);*/
 		
-        CharacterData cd = new CharacterData(new Vector2(0, 0));
+        CharacterData cd = new CharacterData(new Vector2(0, 16));
 
         GameObject player_go = new GameObject();
         player_go.name = "Player";
@@ -58,8 +60,12 @@ public class Initialize : MonoBehaviour
 */
         GameObject tile_holder = new GameObject();
         tile_holder.name = "Tiles";
+        MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
+        mli.floor_sprite = floor_sprite;
+        mli.wall_sprite = wall_sprite;
+        mli.mapImage = mapImage;
 
-        for (int x = 0; x < 20; x++)
+        /*for (int x = 0; x < 20; x++)
         {
             for (int y = 0; y < 20; y++)
             {
@@ -91,6 +97,6 @@ public class Initialize : MonoBehaviour
 
                 GameData.SetTile(x, y, td);
             }
-        }
+        }*/
     }
 }

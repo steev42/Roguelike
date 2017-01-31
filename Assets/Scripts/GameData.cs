@@ -55,7 +55,7 @@ public class GameData
 
     public static TileData GetTile(Vector2 tileCoord)
     {
-        if (tileMap.ContainsKey(tileCoord))
+        if (tileMap != null && tileMap.ContainsKey(tileCoord))
         {
             return tileMap[tileCoord];
         }
