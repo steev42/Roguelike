@@ -42,7 +42,7 @@ public class TileData : MonoBehaviour
 
         if (total == 0)
         {
-            mySpriteRenderer.color = Color.black;
+            mySpriteRenderer.color = Color.red;
         }
         else if (total > minLight)
         {

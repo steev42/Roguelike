@@ -110,7 +110,9 @@ public class GameData
     public static bool InLineOfSight(Vector2 fromLocation, Vector2 toLocation, int maxVisionRange = int.MaxValue, float squareSize = 1.0f)
     {
         if (Vector2.Distance(fromLocation, toLocation) > maxVisionRange)
+        {
             return false;
+        }
 
         // Go just inside squares.  This prevents corner-to-corner shenanigans.
         float half = (squareSize / 2) - .001f;
@@ -125,10 +127,12 @@ public class GameData
         {
             for (int j = 0; j < Corners.Length; j++)
             {
-
-                RaycastHit2D hit = Physics2D.Linecast(fromLocation + Corners[i], toLocation + Corners[j]);
+                Vector2 start = fromLocation + Corners[i];
+                Vector2 end = toLocation + Corners[j];
+                RaycastHit2D hit = Physics2D.Linecast(start, end);
                 if (hit.collider == null)
                 {
+                    //  Debug.Log("From " + start + " to " + end + " hits nothing.");
                     return true;
                 }
                 else
@@ -136,8 +140,10 @@ public class GameData
                     Vector2 hitpos = (Vector2)hit.collider.transform.position;
                     if (hitpos.Equals(fromLocation) || hitpos.Equals(toLocation))
                     {
+                        //         Debug.Log("From " + start + " to " + end + " hits a wall, but one of those IS a wall.");
                         return true;
                     }
+                    //      Debug.Log("From " + start.ToString() + " to " + end.ToString() + " hits a wall.");
                 }
             }
 
