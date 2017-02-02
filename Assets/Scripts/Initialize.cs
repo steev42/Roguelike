@@ -37,6 +37,8 @@ public class Initialize : MonoBehaviour
         player_sr.sprite = player_sprite;
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
+        LightSource l = player_go.AddComponent<LightSource>();
+        l.lightIntensity = 16;
 
         GameData.MapCharacterToObject(cd, player_go);
 

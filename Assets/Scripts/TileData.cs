@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TileData : MonoBehaviour
 {
-    public float movementSpeedMultiplier;
+    public float movementSpeedMultiplier = 1.0f;
 	
     public Color originalColor;
     private Dictionary<LightSource, float> lightLevel;
@@ -16,6 +16,17 @@ public class TileData : MonoBehaviour
         mySpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    public float GetTotalLightLevel()
+    {
+        float total = 0f;
+        foreach (LightSource l in lightLevel.Keys)
+        {
+            total += lightLevel[l];
+        }
+
+        return total;
+    }
+
     void Update()
     {
         if (mySpriteRenderer == null)
@@ -23,13 +34,17 @@ public class TileData : MonoBehaviour
 
         float minLight = GameData.GetActiveCharacter().minimumLightToSee;
         float maxLight = GameData.DEFAULT_LIGHT;
-        float pct = Mathf.Min(maxLight, lightLevel) - minLight / (maxLight - minLight);
 
-        if (lightLevel == 0)
+        float total = GetTotalLightLevel();
+
+        float pct = Mathf.Min(maxLight, total) - minLight / (maxLight - minLight);
+
+
+        if (total == 0)
         {
             mySpriteRenderer.color = Color.black;
         }
-        else if (lightLevel > minLight)
+        else if (total > minLight)
         {
             mySpriteRenderer.color = originalColor;
         }
@@ -41,6 +56,10 @@ public class TileData : MonoBehaviour
 
     public void SetLightLevel(LightSource source, float light)
     {
+        if (lightLevel == null)
+        {
+            lightLevel = new Dictionary<LightSource, float>();
+        }
         lightLevel[source] = light;
     }
 

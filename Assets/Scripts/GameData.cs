@@ -6,18 +6,22 @@ public class GameData
 {
     public const float DEFAULT_LIGHT = 4.0f;
 
-    static Dictionary <Vector2, TileData> tileMap;
+    static Dictionary <Vector2, GameObject> tileMap;
 
     static Dictionary <CharacterData, GameObject> characterObjectMap;
-    static Dictionary <TileData, GameObject> tileObjectMap;
 
-    static List<LightSource> lightSources;
+    // static List<LightSource> lightSources;
 
     static CharacterData activeCharacter;
 
     public static bool isValidMove(Vector2 target)
     {
-        TileData tile = GetTile(target);
+        GameObject obj = GetTile(target);
+        if (obj == null)
+        {
+            return false;
+        }
+        TileData tile = obj.GetComponent<TileData>();
         if (tile != null && tile.movementSpeedMultiplier != 0)
         {
             return true;
@@ -26,7 +30,7 @@ public class GameData
         return false;
     }
 
-    public static void AddLightSource(LightSource l)
+    /*  public static void AddLightSource(LightSource l)
     {
         if (lightSources == null)
         {
@@ -43,19 +47,19 @@ public class GameData
             lightSources = new List<LightSource>();
         }
         return lightSources;
-    }
+    }*/
 
-    public static void SetTile(int x, int y, TileData td)
+    public static void SetTile(int x, int y, GameObject td)
     {
         if (tileMap == null)
         {
-            tileMap = new Dictionary<Vector2, TileData>();
+            tileMap = new Dictionary<Vector2, GameObject>();
         }
 
         tileMap[new Vector2(x, y)] = td;
     }
 
-    public static TileData GetTile(Vector2 tileCoord)
+    public static GameObject GetTile(Vector2 tileCoord)
     {
         if (tileMap != null && tileMap.ContainsKey(tileCoord))
         {
@@ -67,7 +71,7 @@ public class GameData
         }
     }
 
-    public static TileData GetTile(int x, int y)
+    public static GameObject GetTile(int x, int y)
     {
         Vector2 pos = new Vector2(x, y);
         return GetTile(pos);

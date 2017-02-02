@@ -24,8 +24,10 @@ public class MapLoaderImage : MonoBehaviour
                 tile_go.transform.SetParent(this.transform);
                 SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
                 sr.color = Color.gray;
+                TileData td = tile_go.AddComponent<TileData>();
+                td.originalColor = Color.gray;
             
-                TileData td = new TileData(tile_go);
+                // TileData td = new TileData(tile_go);
 
                 if (pixels[(y * mapImage.width) + x].Equals(new Color32(0, 0, 0, 255)))
                 {
@@ -39,9 +41,9 @@ public class MapLoaderImage : MonoBehaviour
                     sr.sprite = floor_sprite;
                 }
 
-                LightedLocation ll = tile_go.AddComponent<LightedLocation>();
-                ll.originalColor = Color.gray;
-                GameData.SetTile(x, y, td);
+                /*LightedLocation ll = tile_go.AddComponent<LightedLocation>();
+                ll.originalColor = Color.gray;*/
+                GameData.SetTile(x, y, tile_go);
             }
         }
     }
