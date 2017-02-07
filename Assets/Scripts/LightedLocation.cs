@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if false
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,12 +8,33 @@ public class LightedLocation : MonoBehaviour
     public Color originalColor;
     public float lightLevel;
 
+    private CharacterData storedCharacter = null;
+    private Vector2 storedLocation = new Vector2(-1, -1);
+
+    void Start()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
+        CharacterData activeCharacter = GameData.GetActiveCharacter();
+        if (activeCharacter.Equals(storedCharacter) && activeCharacter.location == storedLocation)
+        {
+            // No change since last update.  No need to redraw the map.
+            return;
+        }
+
+        storedLocation = activeCharacter.location;
+        storedCharacter = activeCharacter;
+
         lightLevel = 0f;
 
-        CharacterData activeCharacter = GameData.GetActiveCharacter();
+        if (this.gameObject.GetComponent<SpriteRenderer>().isVisible == false)
+        {
+            return; // We're not even seen on camera.  Don't bother with the math.
+        }
 
         // Does the active character have line of sight to this location.  If not, let's not check the lights.
         if (CanSeeLight(activeCharacter.location, transform.position))
@@ -92,3 +114,4 @@ public class LightedLocation : MonoBehaviour
     }
 
 }
+#endif
