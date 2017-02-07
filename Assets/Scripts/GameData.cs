@@ -6,15 +6,22 @@ public class GameData
 {
     public const float DEFAULT_LIGHT = 4.0f;
 
-    static Dictionary <Vector2, TileData> tileMap;
+    static Dictionary <Vector2, GameObject> tileMap;
 
-    static List<LightSource> lightSources;
+    static Dictionary <CharacterData, GameObject> characterObjectMap;
+
+    // static List<LightSource> lightSources;
 
     static CharacterData activeCharacter;
 
     public static bool isValidMove(Vector2 target)
     {
-        TileData tile = GetTile(target);
+        GameObject obj = GetTile(target);
+        if (obj == null)
+        {
+            return false;
+        }
+        TileData tile = obj.GetComponent<TileData>();
         if (tile != null && tile.movementSpeedMultiplier != 0)
         {
             return true;
@@ -23,30 +30,7 @@ public class GameData
         return false;
     }
 
-    /*static ActionTree initiativeTracker;
-
-	public static void EnqueueAction (ActionDefinition a)
-	{
-		if (initiativeTracker == null) {
-			initiativeTracker = new ActionTree (a);
-		} else {
-			initiativeTracker.EnqueueAction (a);
-		}
-			
-		PerformNextAction ();
-	}
-
-	public static void PerformNextAction ()
-	{
-		if (initiativeTracker == null) {
-			return;
-		} else {
-			ActionDefinition a = initiativeTracker.DequeueAction (null);
-			a.doAction ();
-		}
-	}*/
-
-    public static void AddLightSource(LightSource l)
+    /*  public static void AddLightSource(LightSource l)
     {
         if (lightSources == null)
         {
@@ -63,21 +47,21 @@ public class GameData
             lightSources = new List<LightSource>();
         }
         return lightSources;
-    }
+    }*/
 
-    public static void SetTile(int x, int y, TileData td)
+    public static void SetTile(int x, int y, GameObject td)
     {
         if (tileMap == null)
         {
-            tileMap = new Dictionary<Vector2, TileData>();
+            tileMap = new Dictionary<Vector2, GameObject>();
         }
 
         tileMap[new Vector2(x, y)] = td;
     }
 
-    public static TileData GetTile(Vector2 tileCoord)
+    public static GameObject GetTile(Vector2 tileCoord)
     {
-        if (tileMap.ContainsKey(tileCoord))
+        if (tileMap != null && tileMap.ContainsKey(tileCoord))
         {
             return tileMap[tileCoord];
         }
@@ -87,7 +71,7 @@ public class GameData
         }
     }
 
-    public static TileData GetTile(int x, int y)
+    public static GameObject GetTile(int x, int y)
     {
         Vector2 pos = new Vector2(x, y);
         return GetTile(pos);
@@ -102,4 +86,70 @@ public class GameData
     {
         return activeCharacter;
     }
+
+    public static GameObject GetActiveCharacterObject()
+    {
+        if (characterObjectMap == null || characterObjectMap.ContainsKey(activeCharacter) == false)
+        {
+            Debug.LogWarning("Requesting Character's GameObject when one doesn't exist.");
+            return null;
+        }
+        return characterObjectMap[activeCharacter];
+
+    }
+
+    public static void MapCharacterToObject(CharacterData cd, GameObject go)
+    {
+        if (characterObjectMap == null)
+        {
+            characterObjectMap = new Dictionary<CharacterData,GameObject>();
+        }
+        characterObjectMap[cd] = go;
+    }
+
+    public static bool InLineOfSight(Vector2 fromLocation, Vector2 toLocation, int maxVisionRange = int.MaxValue, float squareSize = 1.0f)
+    {
+        if (Vector2.Distance(fromLocation, toLocation) > maxVisionRange)
+        {
+            return false;
+        }
+
+        // Go just inside squares.  This prevents corner-to-corner shenanigans.
+        float half = (squareSize / 2) - .001f;
+        Vector2[] Corners =
+            {
+                new Vector2(-half, -half),
+                new Vector2(half, half),
+                new Vector2(-half, half),
+                new Vector2(half, -half)
+            };
+        for (int i = 0; i < Corners.Length; i++)
+        {
+            for (int j = 0; j < Corners.Length; j++)
+            {
+                Vector2 start = fromLocation + Corners[i];
+                Vector2 end = toLocation + Corners[j];
+                RaycastHit2D hit = Physics2D.Linecast(start, end);
+                if (hit.collider == null)
+                {
+                    //  Debug.Log("From " + start + " to " + end + " hits nothing.");
+                    return true;
+                }
+                else
+                {
+                    Vector2 hitpos = (Vector2)hit.collider.transform.position;
+                    if (hitpos.Equals(fromLocation) || hitpos.Equals(toLocation))
+                    {
+                        //         Debug.Log("From " + start + " to " + end + " hits a wall, but one of those IS a wall.");
+                        return true;
+                    }
+                    //      Debug.Log("From " + start.ToString() + " to " + end.ToString() + " hits a wall.");
+                }
+            }
+
+        }
+        return false;
+    }
+
+
 }

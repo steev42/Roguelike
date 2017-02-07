@@ -14,15 +14,17 @@ public class Initialize : MonoBehaviour
 
     public Sprite nuper_sprite;
 
+    public Texture2D mapImage;
+
     // Use this for initialization
     void Start()
     {
-        LightSource temp = new LightSource();
+/*        LightSource temp = new LightSource();
         temp.location = new Vector2(0, 0);
         temp.lightIntensity = 1;
-        GameData.AddLightSource(temp);
+        GameData.AddLightSource(temp);*/
 		
-        CharacterData cd = new CharacterData(new Vector2(0, 0));
+        CharacterData cd = new CharacterData(new Vector2(0, 16));
 
         GameObject player_go = new GameObject();
         player_go.name = "Player";
@@ -35,11 +37,15 @@ public class Initialize : MonoBehaviour
         player_sr.sprite = player_sprite;
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
+        LightSource l = player_go.AddComponent<LightSource>();
+        l.lightIntensity = 16;
+
+        GameData.MapCharacterToObject(cd, player_go);
 
         GameData.SetActiveCharacter(cd); // TODO This isn't the way to do this...
 
 
-        CharacterData nuper_data = new CharacterData(new Vector2(5, 5)); 
+        /*    CharacterData nuper_data = new CharacterData(new Vector2(5, 5)); 
 
         GameObject nuper_go = new GameObject();
         nuper_go.name = "Test Nuper";
@@ -52,12 +58,18 @@ public class Initialize : MonoBehaviour
         UpdateCharacterSpriteLocation nscr = nuper_go.AddComponent<UpdateCharacterSpriteLocation>();
         nscr.cd = nuper_data;
 
+        GameData.MapCharacterToObject(nuper_data, nuper_go);
+*/
         GameObject tile_holder = new GameObject();
         tile_holder.name = "Tiles";
+        MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
+        mli.floor_sprite = floor_sprite;
+        mli.wall_sprite = wall_sprite;
+        mli.mapImage = mapImage;
 
-        for (int x = -10; x < 10; x++)
+        /*for (int x = 0; x < 20; x++)
         {
-            for (int y = -10; y < 10; y++)
+            for (int y = 0; y < 20; y++)
             {
                 GameObject tile_go = new GameObject();
                 tile_go.name = "Tile_" + x + "_" + y;
@@ -69,7 +81,8 @@ public class Initialize : MonoBehaviour
                 TileData td = new TileData(tile_go);
 
                 //if (x == 3 || x == -3 || y == -3 || y == 3) {
-                if (Random.Range(0, 10) == 0)
+                //if (Random.Range(0, 10) == 0)
+                if ((x == 3 || x == 5) && (y == 3 || y == 5))
                 {
                     sr.sprite = wall_sprite;
                     td.movementSpeedMultiplier = 0.0f;
@@ -86,6 +99,6 @@ public class Initialize : MonoBehaviour
 
                 GameData.SetTile(x, y, td);
             }
-        }
+        }*/
     }
 }
