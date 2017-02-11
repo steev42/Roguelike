@@ -35,6 +35,7 @@ public class Initialize : MonoBehaviour
         SpriteRenderer player_sr = player_go.AddComponent<SpriteRenderer>();
         player_sr.color = Color.white;
         player_sr.sprite = player_sprite;
+        player_sr.sortingLayerName = "Units";
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
         LightSource l = player_go.AddComponent<LightSource>();

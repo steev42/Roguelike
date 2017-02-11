@@ -28,7 +28,8 @@ public class MoveAction : ICharacterAction
     {
         if (GameData.isValidMove(targetLocation))
         {
-            character.UpdateLocation(targetLocation);
+            initiatingAI.Character.UpdateLocation(targetLocation);
+            //character.UpdateLocation(targetLocation);
             //character.obj.transform.position = targetLocation;
         }
     }

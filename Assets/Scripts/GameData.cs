@@ -10,9 +10,26 @@ public class GameData
 
     static Dictionary <CharacterData, GameObject> characterObjectMap;
 
-    // static List<LightSource> lightSources;
-
     static CharacterData activeCharacter;
+
+    public static void CullDisplay(Vector2 centerTile, int range)
+    {
+        int startx = (int)centerTile.x;
+        int starty = (int)centerTile.y;
+
+        foreach (Vector2 pos in tileMap.Keys)
+        {
+            if (pos.x < (startx - range) || pos.x > (startx + range) || pos.y < (starty - range) || pos.y > (starty + range))
+            {
+                // out of range
+                tileMap[pos].SetActive(false);
+            }
+            else
+            {
+                tileMap[pos].SetActive(true);
+            }
+        }
+    }
 
     public static bool isValidMove(Vector2 target)
     {
@@ -29,25 +46,6 @@ public class GameData
         //TODO Other conditions, like another creature in this tile?
         return false;
     }
-
-    /*  public static void AddLightSource(LightSource l)
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-
-        lightSources.Add(l);
-    }
-
-    public static List<LightSource> GetLightSources()
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-        return lightSources;
-    }*/
 
     public static void SetTile(int x, int y, GameObject td)
     {

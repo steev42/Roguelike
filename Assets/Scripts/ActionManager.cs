@@ -28,6 +28,9 @@ public class ActionManager : MonoBehaviour
 
     private void PerformNextAction()
     {
+
+        // This check is not truly needed, since the Update() method calls the GetNextActor,
+        // which checks for valid initativeTracker.  Kept to double-check.
         if (initiativeTracker == null)
         {
             return;
@@ -46,7 +49,18 @@ public class ActionManager : MonoBehaviour
                 }
             }
             waiting = true;
-            EnqueueAction(a.GetInitiatingAI().GetNextAction());
+        }
+    }
+
+    private AI GetNextActor()
+    {
+        if (initiativeTracker == null)
+        {
+            return null;
+        }
+        else
+        {
+            return initiativeTracker.PeekNextAction().GetInitiatingAI();
         }
     }
 
@@ -59,9 +73,21 @@ public class ActionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // waiting for the next action to be performed.  This semaphore prevents multiple actions
+        // from occurring at the same time.
         if (waiting)
         {
+            AI actor = GetNextActor();
+            if (actor == null)
+                return; // No action to perform.
+
+            if (actor is AI_Player)
+            {
+                GameData.SetActiveCharacter(actor.Character);
+            }
+
             PerformNextAction();
+            EnqueueAction(actor.GetNextAction());
         }
     }
 }

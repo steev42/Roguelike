@@ -24,6 +24,7 @@ public class MapLoaderImage : MonoBehaviour
                 tile_go.transform.SetParent(this.transform);
                 SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
                 sr.color = Color.gray;
+                sr.sortingLayerName = "Floor";
                 TileData td = tile_go.AddComponent<TileData>();
                 td.originalColor = Color.gray;
             
