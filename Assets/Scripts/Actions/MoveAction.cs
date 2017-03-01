@@ -4,7 +4,7 @@ using UnityEngine;
 public class MoveAction : ICharacterAction
 {
     private AI initiatingAI;
-    private CharacterData character;
+    //private CharacterData character;
     private Vector2 targetLocation;
     private long timeToMove;
     private long startingTick;
@@ -13,7 +13,7 @@ public class MoveAction : ICharacterAction
     {
         initiatingAI = initiator;
         this.timeToMove = timeToMove;
-        character = cd;
+        //character = cd;
         targetLocation = endMove;
     }
 

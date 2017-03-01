@@ -16,13 +16,35 @@ public class Initialize : MonoBehaviour
 
     public Texture2D mapImage;
 
+    public int CreateGridHeight = 32;
+    public int CreateGridWidth = 32;
+    public int OffscreenBufferSize = 5;
+
     // Use this for initialization
     void Start()
     {
-/*        LightSource temp = new LightSource();
-        temp.location = new Vector2(0, 0);
-        temp.lightIntensity = 1;
-        GameData.AddLightSource(temp);*/
+        GameObject tile_holder = new GameObject();
+        tile_holder.name = "Tiles";
+
+        for (int x = 0; x < CreateGridWidth; x++)
+        {
+            for (int y = 0; y < CreateGridHeight; y++)
+            {
+                GameObject tile_go = new GameObject();
+                tile_go.transform.SetParent(tile_holder.transform);
+                tile_go.name = "Tile_" + x + "_" + y;
+                tile_go.transform.position = new Vector2(x, y);
+                SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
+                sr.color = Color.gray;
+                sr.sortingLayerName = "Floor";
+                TileDisplay td = tile_go.AddComponent<TileDisplay>();
+                //TODO Replace this with a sprite manager of some sort.
+                td.floor_sprite = floor_sprite;
+                td.wall_sprite = wall_sprite;
+                td.OffsetFromOrigin = new Vector2(x, y);
+            }
+        }
+
 		
         CharacterData cd = new CharacterData(new Vector2(0, 16));
 
@@ -61,45 +83,12 @@ public class Initialize : MonoBehaviour
 
         GameData.MapCharacterToObject(nuper_data, nuper_go);
 */
-        GameObject tile_holder = new GameObject();
-        tile_holder.name = "Tiles";
+
         MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
         mli.floor_sprite = floor_sprite;
         mli.wall_sprite = wall_sprite;
         mli.mapImage = mapImage;
 
-        /*for (int x = 0; x < 20; x++)
-        {
-            for (int y = 0; y < 20; y++)
-            {
-                GameObject tile_go = new GameObject();
-                tile_go.name = "Tile_" + x + "_" + y;
-                tile_go.transform.position = new Vector2(x, y);
-                tile_go.transform.SetParent(tile_holder.transform);
-                SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
-                sr.color = Color.gray;
 
-                TileData td = new TileData(tile_go);
-
-                //if (x == 3 || x == -3 || y == -3 || y == 3) {
-                //if (Random.Range(0, 10) == 0)
-                if ((x == 3 || x == 5) && (y == 3 || y == 5))
-                {
-                    sr.sprite = wall_sprite;
-                    td.movementSpeedMultiplier = 0.0f;
-                    //tile_go.AddComponent<Rigidbody2D> ();
-                    tile_go.AddComponent<BoxCollider2D>();
-                }
-                else
-                {
-                    sr.sprite = floor_sprite;
-                }
-
-                LightedLocation ll = tile_go.AddComponent<LightedLocation>();
-                ll.originalColor = Color.gray;
-
-                GameData.SetTile(x, y, td);
-            }
-        }*/
     }
 }

@@ -38,10 +38,9 @@ public class LightSource : MonoBehaviour
                 // both x and y.
                 if (GameData.InLineOfSight(transform.position, pos, maxRange))
                 {
-                    GameObject td_obj = GameData.GetTile(pos);
-                    if (td_obj != null)
+                    TileData td = GameData.GetTile(pos);
+                    if (td != null)
                     {
-                        TileData td = td_obj.GetComponent<TileData>();
                         td.SetLightLevel(this, lightIntensity / (Mathf.Max(1, (x * x) + (y * y))));
                         currentlyLitTiles.Add(pos);
                         if (previouslyLitTiles.Contains(pos))
@@ -55,10 +54,9 @@ public class LightSource : MonoBehaviour
 
         foreach (Vector2 v in previouslyLitTiles)
         {
-            GameObject td_obj = GameData.GetTile(v);
-            if (td_obj != null)
+            TileData td = GameData.GetTile(v);
+            if (td != null)
             {
-                TileData td = td_obj.GetComponent<TileData>();
                 td.SetLightLevel(this, 0);
             }
         }
