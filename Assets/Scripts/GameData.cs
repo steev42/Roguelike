@@ -86,6 +86,8 @@ public class GameData
 
     public static bool InLineOfSight(Vector2 fromLocation, Vector2 toLocation, int maxVisionRange = int.MaxValue, float squareSize = 1.0f)
     {
+
+        //Debug.Log("Checking line of sight between " + fromLocation + " to " + toLocation);
         //TODO Update so this doesn't use linecast, which won't work now.
 
         if (Vector2.Distance(fromLocation, toLocation) > maxVisionRange)
@@ -93,7 +95,25 @@ public class GameData
             return false;
         }
 
-        // Go just inside squares.  This prevents corner-to-corner shenanigans.
+        WuLineAlgorithm line = new WuLineAlgorithm(fromLocation, toLocation);
+        float totalPassThrough = 0f;
+        int countedTiles = 0;
+        Dictionary<Vector2, float> linePoints = line.GetLine();
+        foreach (Vector2 pos in linePoints.Keys)
+        {
+            TileData td = GetTile(pos);
+            if (td != null)
+            {
+                totalPassThrough += td.opacity * (1 - linePoints[pos]);
+                countedTiles++;
+            }
+        }
+
+        totalPassThrough /= countedTiles; // Get Average Pass Through?
+        if (totalPassThrough >= .01)
+            return true;
+
+        /* // Go just inside squares.  This prevents corner-to-corner shenanigans.
         float half = (squareSize / 2) - .001f;
         Vector2[] Corners =
             {
@@ -127,6 +147,7 @@ public class GameData
             }
 
         }
+*/
         return false;
     }
 

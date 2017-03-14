@@ -5,6 +5,8 @@ using UnityEngine;
 public class TileData
 {
     public float movementSpeedMultiplier = 1.0f;
+    public float opacity = 1.0f;
+    // Amount of light that gets through this square.
 	
     public Color originalColor;
     private Dictionary<LightSource, float> lightLevel;

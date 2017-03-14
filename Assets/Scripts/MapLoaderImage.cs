@@ -24,6 +24,7 @@ public class MapLoaderImage : MonoBehaviour
                 {
                     td.movementSpeedMultiplier = 0.0f;
                     td.originalColor = Color.white;
+                    td.opacity = 0.0f; // Wall...
                 }
                 else
                 {

@@ -1,15 +1,34 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class WuLineAlgorithm
 {
-    public WuLineAlgorithm()
+    private Dictionary<Vector2, float> positionbrightness;
+
+    public WuLineAlgorithm(Vector2 startPos, Vector2 endPos)
     {
+        positionbrightness = new Dictionary<Vector2, float>();
+
+        drawLine(startPos.x, startPos.y, endPos.x, endPos.y);
+    }
+
+    public float GetLineBrightnessAt(Vector2 position)
+    {
+        if (positionbrightness == null || positionbrightness.ContainsKey(position) == false)
+            return 0f;
+        return positionbrightness[position];
+    }
+
+    public Dictionary<Vector2, float> GetLine()
+    {
+        return positionbrightness;
     }
 
     void plot(int x, int y, float c)
     {
         //plot the pixel at (x, y) with brightness c (where 0 ≤ c ≤ 1)
+        positionbrightness[new Vector2(x, y)] = c;
     }
 
     // integer part of x
