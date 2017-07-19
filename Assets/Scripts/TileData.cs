@@ -10,10 +10,26 @@ public class TileData : MonoBehaviour
     private Dictionary<LightSource, float> lightLevel;
     private SpriteRenderer mySpriteRenderer;
 
+    public float totalLight;
+
+    private bool needsUpdate = true;
+
     void Start()
     {
         lightLevel = new Dictionary<LightSource, float>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public float GetLightLevel(LightSource l)
+    {
+        if (lightLevel != null && lightLevel.ContainsKey(l))
+        {
+            return lightLevel[l];
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public float GetTotalLightLevel()
@@ -32,26 +48,40 @@ public class TileData : MonoBehaviour
         if (mySpriteRenderer == null)
             return;
 
-        float minLight = GameData.GetActiveCharacter().minimumLightToSee;
-        float maxLight = GameData.DEFAULT_LIGHT;
+        if (needsUpdate == false)
+            return;
 
-        float total = GetTotalLightLevel();
-
-        float pct = Mathf.Min(maxLight, total) - minLight / (maxLight - minLight);
-
-
-        if (total == 0)
+        CharacterData currentChar = GameData.GetActiveCharacter();
+        if (GameData.InLineOfSight(currentChar.location, this.transform.position) == false)  // TODO NOT transform.position anymore...right?
         {
-            mySpriteRenderer.color = Color.red;
+            mySpriteRenderer.color = Color.black;
         }
-        else if (total > minLight)
+        else  // In line of sight.  Update based on lighting.
         {
-            mySpriteRenderer.color = originalColor;
+            float minLight = GameData.GetActiveCharacter().minimumLightToSee;
+            float maxLight = GameData.DEFAULT_LIGHT;
+
+            float total = GetTotalLightLevel();
+            totalLight = total;
+
+            float pct = Mathf.Min(maxLight, total) - minLight / (maxLight - minLight);
+
+
+            if (total == 0)
+            {
+                mySpriteRenderer.color = Color.black;
+            }
+            else if (total > minLight)
+            {
+                mySpriteRenderer.color = originalColor;
+            }
+            else
+            {
+                mySpriteRenderer.color = new Color(Mathf.Lerp(0, originalColor.r, pct), Mathf.Lerp(0, originalColor.g, pct), Mathf.Lerp(0, originalColor.b, pct));
+            }
         }
-        else
-        {
-            mySpriteRenderer.color = new Color(Mathf.Lerp(0, originalColor.r, pct), Mathf.Lerp(0, originalColor.g, pct), Mathf.Lerp(0, originalColor.b, pct));
-        }
+
+        needsUpdate = false;
     }
 
     public void SetLightLevel(LightSource source, float light)
@@ -61,6 +91,8 @@ public class TileData : MonoBehaviour
             lightLevel = new Dictionary<LightSource, float>();
         }
         lightLevel[source] = light;
+
+        needsUpdate = true;
     }
 
 }
