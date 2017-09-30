@@ -58,7 +58,7 @@ public class TileData : MonoBehaviour
         }
         else  // In line of sight.  Update based on lighting.
         {
-            float minLight = GameData.GetActiveCharacter().minimumLightToSee;
+            float minLight = GameData.GetActiveCharacter().GetAttribute(CharacterAttributes.MIN_LIGHT_FOR_SIGHT);
             float maxLight = GameData.DEFAULT_LIGHT;
 
             float total = GetTotalLightLevel();
