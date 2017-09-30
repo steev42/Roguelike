@@ -16,7 +16,7 @@ public class CharacterData
     {
         location = loc;
         queuedActions = new Queue<ICharacterAction>();
-        attributes = new CharacterAttributes();
+        attributes = CharacterAttributes.PCAttributes();
     }
 
     public void UpdateLocation(Vector2 loc)

@@ -12,7 +12,7 @@ public class CharacterStat
     {
         statName = name;
         baseValue = bv;
-        adjustments = new Dictionary<string, CharacterStat>;
+        adjustments = new Dictionary<string, CharacterStat>();
     }
 
     public float GetCurrentValue()
