@@ -13,8 +13,14 @@ public class AI_Player : AI
     }
 
     override public ICharacterAction GetNextAction()
-    {
-        if (GameData.isValidMove(Character.location + moveVector) && moveVector.Equals(Vector2.zero) == false)
+    {   
+        if (GameData.isValidAttack(Character.location + moveVector) && moveVector.Equals(Vector2.zero) == false)
+        {
+            AttackAction a = new AttackAction(this, 15, aiFor, Character.location + moveVector);
+            moveVector = Vector2.zero;
+            return a;
+        }
+        else if (GameData.isValidMove(Character.location + moveVector) && moveVector.Equals(Vector2.zero) == false)
         {
             MoveAction a = new MoveAction(this, 10, aiFor, Character.location + moveVector);
             moveVector = Vector2.zero; // reset the vector

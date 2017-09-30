@@ -10,12 +10,32 @@ public class GameData
 
     static Dictionary <CharacterData, GameObject> characterObjectMap;
 
+    static bool inMoveState = true;
+
+    public static void toggleMove()
+    {
+        inMoveState = true;
+    }
+
+    public static void toggleAttack()
+    {
+        inMoveState = false;
+    }
+
+    public static bool isInAttackState()
+    {
+        return !inMoveState;
+    }
+
     // static List<LightSource> lightSources;
 
     static CharacterData activeCharacter;
 
     public static bool isValidMove(Vector2 target)
     {
+        if (inMoveState == false)
+            return false;
+
         GameObject obj = GetTile(target);
         if (obj == null)
         {
@@ -30,24 +50,22 @@ public class GameData
         return false;
     }
 
-    /*  public static void AddLightSource(LightSource l)
+    public static bool isValidAttack(Vector2 target)
     {
-        if (lightSources == null)
+        if (inMoveState == true)
+            return false;
+
+        GameObject obj = GetTile(target);
+        if (obj == null)
         {
-            lightSources = new List<LightSource>();
+            return false;
         }
 
-        lightSources.Add(l);
+        TileData tile = obj.GetComponent<TileData>();
+        //TODO Check to see if there's a valid target
+        return true;
     }
 
-    public static List<LightSource> GetLightSources()
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-        return lightSources;
-    }*/
 
     public static void SetTile(int x, int y, GameObject td)
     {
