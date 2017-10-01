@@ -6,7 +6,6 @@ public class CharacterData : IAttackableObject
 {
     public Vector2 location;
 
-    public Queue<ICharacterAction> queuedActions;
     public Vector2 queuedLocation;
 
     public AI character_ai;
@@ -14,16 +13,25 @@ public class CharacterData : IAttackableObject
 
     public CharacterData(Vector2 loc)
     {
-        location = loc;
-        queuedActions = new Queue<ICharacterAction>();
+       // location = loc;
         attributes = CharacterAttributes.PCAttributes();
+        location = loc;
     }
 
     public void UpdateLocation(Vector2 loc)
     {
+
+        if (GameData.GetTile(loc) == null || GameData.GetTile(loc).GetComponent<TileData>() == null)
+        {
+            Debug.LogWarning("Updating location to null tile?");
+            return;
+        }   
+
         if (GameData.GetTile(loc).GetComponent<TileData>().JoinTile(this))
         {
+            GameData.GetTile(location).GetComponent<TileData>().LeaveTile(this);
             location = loc;
+
         }
         else
         {

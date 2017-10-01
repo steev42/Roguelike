@@ -34,18 +34,29 @@ public class GameData
     public static bool isValidMove(IPhysicalObject o, Vector2 target)
     {
         if (inMoveState == false)
+        {
+            Debug.Log("Not in move state, so invalid move.");
             return false;
+        }
 
         GameObject obj = GetTile(target);
         if (obj == null)
         {
+            Debug.LogWarning("Unable to find target tile.  Invalid move.");
             return false;
         }
         TileData tile = obj.GetComponent<TileData>();
-        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.PeekTile(o))
+        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.PeekTile(o).Equals(o))
         {
+            Debug.Log("Tile " + target + " exists, allows entry, and is unoccupied.  Valid Move!");
             return true;
         }
+
+        if (tile.PeekTile(o) != null && tile.PeekTile(o).Equals(o) == false)
+        {
+            Debug.Log("Tile blocked by " + characterObjectMap[(CharacterData)tile.PeekTile(o)].gameObject.name);
+        }
+        
         return false;
     }
 

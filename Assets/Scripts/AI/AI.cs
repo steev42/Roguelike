@@ -16,9 +16,9 @@ public abstract class AI : MonoBehaviour
 
     public void Start()
     {
-        // Setup our first move.  This should make it so that we are now queried when it's time to 
-        // do our next move.
-        GameObject.Find("GameManager").GetComponent<ActionManager>().EnqueueAction(GetNextAction());
+        // Setup our first move.  This should make it so that we are assigned to our starting location, 
+        // and we are now queried when it's time to do our next move.
+        GameObject.Find("GameManager").GetComponent<ActionManager>().EnqueueAction(new MoveAction(this, 0, Character, Character.location, "Initial Move"));
     }
 }
 

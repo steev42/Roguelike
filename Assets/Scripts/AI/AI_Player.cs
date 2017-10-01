@@ -13,14 +13,19 @@ public class AI_Player : AI
     }
 
     override public ICharacterAction GetNextAction()
-    {   
-        if (GameData.isValidAttack(Character.location + moveVector) && moveVector.Equals(Vector2.zero) == false)
+    {
+        if (moveVector.Equals(Vector2.zero))
+        {
+            return new PauseAction(this, 0);
+        }
+
+        if (GameData.isValidAttack(Character.location + moveVector))
         {
             AttackAction a = new AttackAction(this, 15, aiFor, Character.location + moveVector);
             moveVector = Vector2.zero;
             return a;
         }
-        else if (GameData.isValidMove(Character, Character.location + moveVector) && moveVector.Equals(Vector2.zero) == false)
+        else if (GameData.isValidMove(Character, Character.location + moveVector))
         {
             MoveAction a = new MoveAction(this, 10, aiFor, Character.location + moveVector);
             moveVector = Vector2.zero; // reset the vector
@@ -28,6 +33,7 @@ public class AI_Player : AI
         }
         else
         {
+            //Debug.Log("Attempting an invalid move.");
             moveVector = Vector2.zero; // Reset, since it must be an invalid move.
             return new PauseAction(this, 0);
         }

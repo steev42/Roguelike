@@ -24,20 +24,22 @@ public class TileData : MonoBehaviour
         tileContents = new List<IPhysicalObject>();
     }
 
-    public bool PeekTile(IPhysicalObject o)
+    public IPhysicalObject PeekTile(IPhysicalObject o)
     {
         if (tileContents != null)
         {
             foreach (IPhysicalObject content in tileContents)
             {
+                Debug.Log("Examining " + content.ToString());
                 if (content.isLockedTo(o))
                 {
-                    return false;
+                    Debug.Log("Tile locked due to presence of " + content.ToString());
+                    return content;
                 }
             }
-            return true;
+            return o;
         }
-        return false;
+        return o;
     }
 
     public bool JoinTile(IPhysicalObject o)
