@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileData : MonoBehaviour
 {
+    // TODO Split renderer from data?
     public float movementSpeedMultiplier = 1.0f;
 	
     public Color originalColor;
@@ -14,10 +15,66 @@ public class TileData : MonoBehaviour
 
     private bool needsUpdate = true;
 
+    private List<IPhysicalObject> tileContents;
+
     void Start()
     {
         lightLevel = new Dictionary<LightSource, float>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+        tileContents = new List<IPhysicalObject>();
+    }
+
+    public bool PeekTile(IPhysicalObject o)
+    {
+        if (tileContents != null)
+        {
+            foreach (IPhysicalObject content in tileContents)
+            {
+                if (content.isLockedTo(o))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public bool JoinTile(IPhysicalObject o)
+    {
+        if (tileContents != null)
+        {
+            foreach (IPhysicalObject content in tileContents)
+            {
+                if (content.isLockedTo(o))
+                {
+                    return false;
+                }
+            }
+
+            tileContents.Add(o);
+            return true;
+        }
+       
+        return false;
+    }
+
+    public void LeaveTile(IPhysicalObject o)
+    {
+        if (tileContents != null)
+            tileContents.Remove(o);
+    }
+
+    public bool ContainsAttackableObject()
+    {
+        foreach (IPhysicalObject content in tileContents)
+        {
+            if (content is IAttackableObject)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public float GetLightLevel(LightSource l)

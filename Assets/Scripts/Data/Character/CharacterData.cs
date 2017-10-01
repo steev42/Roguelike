@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterData
+public class CharacterData : IAttackableObject
 {
     public Vector2 location;
 
@@ -21,7 +21,14 @@ public class CharacterData
 
     public void UpdateLocation(Vector2 loc)
     {
-        location = loc;
+        if (GameData.GetTile(loc).GetComponent<TileData>().JoinTile(this))
+        {
+            location = loc;
+        }
+        else
+        {
+            Debug.LogWarning("Unable to move into " + loc + ".  Tile locked.");
+        }
         //temp.location = loc;
     }
 
@@ -33,5 +40,14 @@ public class CharacterData
     public int GetAttributeAsInteger (string s)
     {
         return attributes.GetAttributeInteger(s);
+    }
+
+    public bool isLockedTo(IPhysicalObject o)
+    {
+        if (o is CharacterData)
+        {
+            return true; // Only one character can be in a tile at a time.
+        }
+        return false; // But they don't lock anything else right now.
     }
 }

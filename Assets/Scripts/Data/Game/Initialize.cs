@@ -43,7 +43,7 @@ public class Initialize : MonoBehaviour
         player_sr.sortingLayerName = "Units";
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
-        LightSource l = player_go.AddComponent<LightSource>();
+        LightSource l = player_go.AddComponent<LightSource>();  // TODO Eventually mapped to an inventory object rather than character.
         l.UpdateIntensity(16.0f);
         
         GameData.MapCharacterToObject(cd, player_go);

@@ -26,7 +26,7 @@ public class MoveAction : ICharacterAction
 
     public void DoAction()
     {
-        if (GameData.isValidMove(targetLocation))
+        if (GameData.isValidMove(character, targetLocation))
         {
             character.UpdateLocation(targetLocation);
             //character.obj.transform.position = targetLocation;

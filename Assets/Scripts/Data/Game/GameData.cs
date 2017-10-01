@@ -31,7 +31,7 @@ public class GameData
 
     static CharacterData activeCharacter;
 
-    public static bool isValidMove(Vector2 target)
+    public static bool isValidMove(IPhysicalObject o, Vector2 target)
     {
         if (inMoveState == false)
             return false;
@@ -42,11 +42,10 @@ public class GameData
             return false;
         }
         TileData tile = obj.GetComponent<TileData>();
-        if (tile != null && tile.movementSpeedMultiplier != 0)
+        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.PeekTile(o))
         {
             return true;
         }
-        //TODO Other conditions, like another creature in this tile?
         return false;
     }
 
@@ -62,8 +61,7 @@ public class GameData
         }
 
         TileData tile = obj.GetComponent<TileData>();
-        //TODO Check to see if there's a valid target
-        return true;
+        return tile.ContainsAttackableObject();
     }
 
 
