@@ -5,6 +5,7 @@ public abstract class AI : MonoBehaviour
 {
 
     protected CharacterData aiFor;
+    protected bool isInActionTree = false;
 
     // This method determines the weighting of the characters actions.
     abstract public void SetActionWeights();
@@ -16,9 +17,14 @@ public abstract class AI : MonoBehaviour
 
     public void Start()
     {
+
+        //if (isInActionTree)
+        //    return;
         // Setup our first move.  This should make it so that we are assigned to our starting location, 
         // and we are now queried when it's time to do our next move.
+
         GameObject.Find("GameManager").GetComponent<ActionManager>().EnqueueAction(new MoveAction(this, 0, Character, Character.location, "Initial Move"));
+        //isInActionTree = true;
     }
 }
 

@@ -24,7 +24,7 @@ public class TileData : MonoBehaviour
         tileContents = new List<IPhysicalObject>();
     }
 
-    public IPhysicalObject PeekTile(IPhysicalObject o)
+    public bool isTileLockedTo(IPhysicalObject o)
     {
         if (tileContents != null)
         {
@@ -34,30 +34,35 @@ public class TileData : MonoBehaviour
                 if (content.isLockedTo(o))
                 {
                     Debug.Log("Tile locked due to presence of " + content.ToString());
-                    return content;
+                    return true;
                 }
             }
-            return o;
+            return false;
         }
-        return o;
+        return false;
     }
 
     public bool JoinTile(IPhysicalObject o)
     {
         if (tileContents != null)
         {
+            Debug.Log("Tile contains " + tileContents.Count + " objects.");
             foreach (IPhysicalObject content in tileContents)
             {
+                Debug.Log("Looking at " + content.ToString());
                 if (content.isLockedTo(o))
                 {
+                    Debug.Log("Tile is occupied.");
                     return false;
                 }
             }
 
             tileContents.Add(o);
+            Debug.Log("Successfully joined tile. Now contains " + tileContents.Count);
             return true;
         }
-       
+
+        Debug.Log("tileContents are null");
         return false;
     }
 
@@ -94,7 +99,7 @@ public class TileData : MonoBehaviour
     public float GetTotalLightLevel()
     {
         float total = 0f;
-        foreach (LightSource l in lightLevel.Keys)
+        foreach (LightSource l in lightLevel.Keys) 
         {
             total += lightLevel[l];
         }

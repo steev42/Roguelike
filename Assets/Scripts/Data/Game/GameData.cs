@@ -46,15 +46,15 @@ public class GameData
             return false;
         }
         TileData tile = obj.GetComponent<TileData>();
-        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.PeekTile(o).Equals(o))
+        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.isTileLockedTo(o) == false)
         {
             Debug.Log("Tile " + target + " exists, allows entry, and is unoccupied.  Valid Move!");
             return true;
         }
 
-        if (tile.PeekTile(o) != null && tile.PeekTile(o).Equals(o) == false)
+        if (tile.isTileLockedTo(o) == true)
         {
-            Debug.Log("Tile blocked by " + characterObjectMap[(CharacterData)tile.PeekTile(o)].gameObject.name);
+            Debug.Log("Tile blocked by another object.");
         }
         
         return false;

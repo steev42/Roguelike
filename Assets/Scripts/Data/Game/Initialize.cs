@@ -16,9 +16,16 @@ public class Initialize : MonoBehaviour
 
     public Texture2D mapImage;
 
+    bool isInitialized = false;
+
     // Use this for initialization
-    void Start()
+    void Update()
     {
+
+        if (isInitialized)
+            return;
+
+        isInitialized = true;
 
         GameObject tile_holder = new GameObject();
         tile_holder.name = "Tiles";
