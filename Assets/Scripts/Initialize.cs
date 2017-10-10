@@ -48,12 +48,23 @@ public class Initialize : MonoBehaviour
 		
         CharacterData cd = new CharacterData(new Vector2(0, 16));
 
+        GameObject tile_holder = new GameObject();
+        tile_holder.name = "Tiles";
+        MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
+        mli.floor_sprite = floor_sprite;
+        mli.wall_sprite = wall_sprite;
+        mli.mapImage = mapImage;
+
+
+        CharacterData cd = new CharacterData(new Vector2(15, 16));
+
         GameObject player_go = new GameObject();
         player_go.name = "Player";
         //player_go.transform.position = new Vector2 (0, 0);
         //player_go.AddComponent<PCMovement> ();
         AI_Player pc = player_go.AddComponent<AI_Player>();
         pc.Character = cd;
+        GameData.SetActiveCharacter(cd); // TODO This isn't the way to do this...
         SpriteRenderer player_sr = player_go.AddComponent<SpriteRenderer>();
         player_sr.color = Color.white;
         player_sr.sprite = player_sprite;
@@ -61,11 +72,11 @@ public class Initialize : MonoBehaviour
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
         LightSource l = player_go.AddComponent<LightSource>();
-        l.lightIntensity = 16;
-
+        l.UpdateIntensity(16.0f);
+        
         GameData.MapCharacterToObject(cd, player_go);
 
-        GameData.SetActiveCharacter(cd); // TODO This isn't the way to do this...
+       
 
 
         /*    CharacterData nuper_data = new CharacterData(new Vector2(5, 5)); 
@@ -84,11 +95,11 @@ public class Initialize : MonoBehaviour
         GameData.MapCharacterToObject(nuper_data, nuper_go);
 */
 
+
         MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
         mli.floor_sprite = floor_sprite;
         mli.wall_sprite = wall_sprite;
         mli.mapImage = mapImage;
-
 
     }
 }

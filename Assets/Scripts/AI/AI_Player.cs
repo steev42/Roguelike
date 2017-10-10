@@ -22,6 +22,7 @@ public class AI_Player : AI
         }
         else
         {
+            moveVector = Vector2.zero; // Reset, since it must be an invalid move.
             return new PauseAction(this, 0);
         }
     }
