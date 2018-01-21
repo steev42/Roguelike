@@ -13,9 +13,10 @@ public class CharacterData : IAttackableObject
 
     public CharacterData(Vector2 loc)
     {
-       // location = loc;
-        attributes = CharacterAttributes.PCAttributes();
         location = loc;
+        attributes = CharacterAttributes.PCAttributes();
+        //UpdateLocation(loc);
+        
     }
 
     public void UpdateLocation(Vector2 loc)
@@ -27,7 +28,7 @@ public class CharacterData : IAttackableObject
             return;
         }   
 
-        if (GameData.GetTile(loc).GetComponent<TileData>().JoinTile(this))
+        if (GameData.GetTile(loc).GetComponent<TileData>().JoinTile(this) && loc != location)
         {
             GameData.GetTile(location).GetComponent<TileData>().LeaveTile(this);
             location = loc;

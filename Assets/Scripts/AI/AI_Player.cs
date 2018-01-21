@@ -21,19 +21,21 @@ public class AI_Player : AI
 
         if (GameData.isValidAttack(Character.location + moveVector))
         {
+            Debug.Log("Attacking.");
             AttackAction a = new AttackAction(this, 15, aiFor, Character.location + moveVector);
             moveVector = Vector2.zero;
             return a;
         }
         else if (GameData.isValidMove(Character, Character.location + moveVector))
         {
+            Debug.Log("Moving.");
             MoveAction a = new MoveAction(this, 10, aiFor, Character.location + moveVector);
             moveVector = Vector2.zero; // reset the vector
             return a;
         }
         else
         {
-            //Debug.Log("Attempting an invalid move.");
+            Debug.Log("Attempting an invalid move.");
             moveVector = Vector2.zero; // Reset, since it must be an invalid move.
             return new PauseAction(this, 0);
         }

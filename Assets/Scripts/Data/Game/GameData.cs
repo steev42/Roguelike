@@ -62,16 +62,22 @@ public class GameData
 
     public static bool isValidAttack(Vector2 target)
     {
+        Debug.Log("in isValidAttack");
         if (inMoveState == true)
+        {
+            Debug.Log("In Move State, returning false.");
             return false;
+        }
 
         GameObject obj = GetTile(target);
         if (obj == null)
         {
+            Debug.Log("No associated object, returning false.");
             return false;
         }
 
         TileData tile = obj.GetComponent<TileData>();
+        Debug.Log("Checking to see if there's something to attack.");
         return tile.ContainsAttackableObject();
     }
 

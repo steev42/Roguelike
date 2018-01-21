@@ -14,7 +14,6 @@ public class TileData : MonoBehaviour
     public float totalLight;
 
     private bool needsUpdate = true;
-
     private List<IPhysicalObject> tileContents;
 
     void Start()
@@ -44,6 +43,7 @@ public class TileData : MonoBehaviour
 
     public bool JoinTile(IPhysicalObject o)
     {
+        Debug.Log("Called JoinTile");
         if (tileContents != null)
         {
             Debug.Log("Tile contains " + tileContents.Count + " objects.");
@@ -68,6 +68,7 @@ public class TileData : MonoBehaviour
 
     public void LeaveTile(IPhysicalObject o)
     {
+        Debug.Log("Calling LeaveTile");
         if (tileContents != null)
             tileContents.Remove(o);
     }
@@ -78,8 +79,10 @@ public class TileData : MonoBehaviour
         {
             if (content is IAttackableObject)
             {
+                Debug.Log("Found something to attack.");
                 return true;
             }
+            Debug.Log(content.ToString() + " isn't able to be attacked.");
         }
         return false;
     }
@@ -109,6 +112,9 @@ public class TileData : MonoBehaviour
 
     void Update()
     {
+        if (this.name == "Tile_12_12" && Time.deltaTime % 100 == 0)
+            Debug.Log(tileContents.Count);
+        
         if (mySpriteRenderer == null)
             return;
 
