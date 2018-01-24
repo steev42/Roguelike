@@ -5,23 +5,25 @@ using UnityEngine;
 public class GameData
 {
     public const float DEFAULT_LIGHT = 4.0f;
+    public static Color COLOR_NO_LIGHT = Color.red;
 
-    static Dictionary <Vector2, GameObject> tileMap;
+    static Dictionary <Vector2, TileData> tileMap;
 
     static Dictionary <CharacterData, GameObject> characterObjectMap;
 
-    // static List<LightSource> lightSources;
-
     static CharacterData activeCharacter;
+
+    public static Vector2 mapOffset;
 
     public static bool isValidMove(Vector2 target)
     {
-        GameObject obj = GetTile(target);
-        if (obj == null)
+        //TODO This method should be in the MoveAction script instead.
+        TileData tile = GetTile(target);
+/*        if (obj == null)
         {
             return false;
         }
-        TileData tile = obj.GetComponent<TileData>();
+        TileData tile = obj.GetComponent<TileData>();*/
         if (tile != null && tile.movementSpeedMultiplier != 0)
         {
             return true;
@@ -30,36 +32,17 @@ public class GameData
         return false;
     }
 
-    /*  public static void AddLightSource(LightSource l)
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-
-        lightSources.Add(l);
-    }
-
-    public static List<LightSource> GetLightSources()
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-        return lightSources;
-    }*/
-
-    public static void SetTile(int x, int y, GameObject td)
+    public static void SetTile(int x, int y, TileData td)
     {
         if (tileMap == null)
         {
-            tileMap = new Dictionary<Vector2, GameObject>();
+            tileMap = new Dictionary<Vector2, TileData>();
         }
 
         tileMap[new Vector2(x, y)] = td;
     }
 
-    public static GameObject GetTile(Vector2 tileCoord)
+    public static TileData GetTile(Vector2 tileCoord)
     {
         if (tileMap != null && tileMap.ContainsKey(tileCoord))
         {
@@ -71,7 +54,7 @@ public class GameData
         }
     }
 
-    public static GameObject GetTile(int x, int y)
+    public static TileData GetTile(int x, int y)
     {
         Vector2 pos = new Vector2(x, y);
         return GetTile(pos);
@@ -87,15 +70,9 @@ public class GameData
         return activeCharacter;
     }
 
-    public static GameObject GetActiveCharacterObject()
+    public static void CenterViewOn(Vector2 centerOfScreen)
     {
-        if (characterObjectMap == null || characterObjectMap.ContainsKey(activeCharacter) == false)
-        {
-            Debug.LogWarning("Requesting Character's GameObject when one doesn't exist.");
-            return null;
-        }
-        return characterObjectMap[activeCharacter];
-
+        
     }
 
     public static void MapCharacterToObject(CharacterData cd, GameObject go)
@@ -109,12 +86,34 @@ public class GameData
 
     public static bool InLineOfSight(Vector2 fromLocation, Vector2 toLocation, int maxVisionRange = int.MaxValue, float squareSize = 1.0f)
     {
+
+        //Debug.Log("Checking line of sight between " + fromLocation + " to " + toLocation);
+        //TODO Update so this doesn't use linecast, which won't work now.
+
         if (Vector2.Distance(fromLocation, toLocation) > maxVisionRange)
         {
             return false;
         }
 
-        // Go just inside squares.  This prevents corner-to-corner shenanigans.
+        WuLineAlgorithm line = new WuLineAlgorithm(fromLocation, toLocation);
+        float totalPassThrough = 0f;
+        int countedTiles = 0;
+        Dictionary<Vector2, float> linePoints = line.GetLine();
+        foreach (Vector2 pos in linePoints.Keys)
+        {
+            TileData td = GetTile(pos);
+            if (td != null)
+            {
+                totalPassThrough += td.opacity * (1 - linePoints[pos]);
+                countedTiles++;
+            }
+        }
+
+        totalPassThrough /= countedTiles; // Get Average Pass Through?
+        if (totalPassThrough >= .01)
+            return true;
+
+        /* // Go just inside squares.  This prevents corner-to-corner shenanigans.
         float half = (squareSize / 2) - .001f;
         Vector2[] Corners =
             {
@@ -148,6 +147,7 @@ public class GameData
             }
 
         }
+*/
         return false;
     }
 

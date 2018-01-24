@@ -131,6 +131,23 @@ public class LightSource : MonoBehaviour
         {
             for (int y = -1; y <= 1; y++)
             {
+                Vector2 pos = (Vector2)transform.position + new Vector2(x, y);
+                // maxRange provides a second line of defense against spreading too far.
+                // This mainly helps with diagonals, since we're looking at full range for
+                // both x and y.
+                if (GameData.InLineOfSight(transform.position, pos, maxRange))
+                {
+                    TileData td = GameData.GetTile(pos);
+                    if (td != null)
+                    {
+                        td.SetLightLevel(this, lightIntensity / (Mathf.Max(1, (x * x) + (y * y))));
+                        currentlyLitTiles.Add(pos);
+                        if (previouslyLitTiles.Contains(pos))
+                        {
+                            previouslyLitTiles.Remove(pos);
+                        }
+                    }
+                }
                 if (x == 0 || y == 0)
                     UpdateLightingOnTile(x, y, lightIntensity);
                 else
@@ -203,11 +220,12 @@ public class LightSource : MonoBehaviour
 
         foreach (Vector2 v in previouslyLitTiles)
         {
+            TileData td = GameData.GetTile(v);
+            if (td != null)
             Debug.Log("Clearing lighting from " + v + "because it is no longer lit.");
             GameObject td_obj = GameData.GetTile(v);
             if (td_obj != null)
             {
-                TileData td = td_obj.GetComponent<TileData>();
                 td.SetLightLevel(this, 0);
             }
         }

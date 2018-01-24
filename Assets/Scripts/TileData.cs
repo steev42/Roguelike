@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileData : MonoBehaviour
+public class TileData
 {
     public float movementSpeedMultiplier = 1.0f;
+    public float opacity = 1.0f;
+    // Amount of light that gets through this square.
 	
     public Color originalColor;
     private Dictionary<LightSource, float> lightLevel;
-    private SpriteRenderer mySpriteRenderer;
 
+    public TileData()
     public float totalLight;
 
     private bool needsUpdate = true;
@@ -17,7 +19,6 @@ public class TileData : MonoBehaviour
     void Start()
     {
         lightLevel = new Dictionary<LightSource, float>();
-        mySpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public float GetLightLevel(LightSource l)
@@ -42,6 +43,7 @@ public class TileData : MonoBehaviour
 
         return total;
     }
+
 
     void Update()
     {
@@ -93,6 +95,11 @@ public class TileData : MonoBehaviour
         lightLevel[source] = light;
 
         needsUpdate = true;
+    }
+
+    public bool isWall()
+    {
+        return (movementSpeedMultiplier == 0f);
     }
 
 }

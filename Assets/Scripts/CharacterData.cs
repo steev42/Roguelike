@@ -34,6 +34,11 @@ public class CharacterData
     public void UpdateLocation(Vector2 loc)
     {
         location = loc;
+        if (character_ai is AI_Player)
+        {
+            // center view on character.
+            GameData.CenterViewOn(loc);
+        }
         //temp.location = loc;
     }
 }

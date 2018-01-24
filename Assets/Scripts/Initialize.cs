@@ -16,9 +16,37 @@ public class Initialize : MonoBehaviour
 
     public Texture2D mapImage;
 
+    public int CreateGridHeight = 32;
+    public int CreateGridWidth = 32;
+    public int OffscreenBufferSize = 5;
+
     // Use this for initialization
     void Start()
     {
+        GameObject tile_holder = new GameObject();
+        tile_holder.name = "Tiles";
+
+        for (int x = 0; x < CreateGridWidth; x++)
+        {
+            for (int y = 0; y < CreateGridHeight; y++)
+            {
+                GameObject tile_go = new GameObject();
+                tile_go.transform.SetParent(tile_holder.transform);
+                tile_go.name = "Tile_" + x + "_" + y;
+                tile_go.transform.position = new Vector2(x, y);
+                SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
+                sr.color = Color.gray;
+                sr.sortingLayerName = "Floor";
+                TileDisplay td = tile_go.AddComponent<TileDisplay>();
+                //TODO Replace this with a sprite manager of some sort.
+                td.floor_sprite = floor_sprite;
+                td.wall_sprite = wall_sprite;
+                td.OffsetFromOrigin = new Vector2(x, y);
+            }
+        }
+
+		
+        CharacterData cd = new CharacterData(new Vector2(0, 16));
 
         GameObject tile_holder = new GameObject();
         tile_holder.name = "Tiles";
@@ -66,5 +94,12 @@ public class Initialize : MonoBehaviour
 
         GameData.MapCharacterToObject(nuper_data, nuper_go);
 */
+
+
+        MapLoaderImage mli = tile_holder.AddComponent<MapLoaderImage>();
+        mli.floor_sprite = floor_sprite;
+        mli.wall_sprite = wall_sprite;
+        mli.mapImage = mapImage;
+
     }
 }
