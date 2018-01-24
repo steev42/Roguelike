@@ -5,49 +5,98 @@ using UnityEngine;
 public class GameData
 {
     public const float DEFAULT_LIGHT = 4.0f;
+    public const float BASE_HIT_CHANCE = 0.8f;
+    public const float HIT_DIMINISHMENT_FACTOR = 2.0f;
+    public const float DAMAGE_DIMINISHMENT_FACTOR = 2.0f;
+    public const int DEFAULT_ATTRIBUTE_SCORE = 10;
 
     static Dictionary <Vector2, GameObject> tileMap;
 
     static Dictionary <CharacterData, GameObject> characterObjectMap;
 
+    static bool inMoveState = true;
+
+    public static void toggleMove()
+    {
+        inMoveState = true;
+    }
+
+    public static void toggleAttack()
+    {
+        inMoveState = false;
+    }
+
+    public static bool isInAttackState()
+    {
+        return !inMoveState;
+    }
+
     // static List<LightSource> lightSources;
 
     static CharacterData activeCharacter;
 
-    public static bool isValidMove(Vector2 target)
+    public static bool isValidMove(IPhysicalObject o, Vector2 target)
+    {
+        if (inMoveState == false)
+        {
+            Debug.Log("Not in move state, so invalid move.");
+            return false;
+        }
+
+        GameObject obj = GetTile(target);
+        if (obj == null)
+        {
+            Debug.LogWarning("Unable to find target tile.  Invalid move.");
+            return false;
+        }
+        TileData tile = obj.GetComponent<TileData>();
+        if (tile != null && tile.movementSpeedMultiplier != 0 && tile.isTileLockedTo(o) == false)
+        {
+            Debug.Log("Tile " + target + " exists, allows entry, and is unoccupied.  Valid Move!");
+            return true;
+        }
+
+        if (tile.isTileLockedTo(o) == true)
+        {
+            Debug.Log("Tile blocked by another object.");
+        }
+        
+        return false;
+    }
+
+    public static bool isValidAttack(Vector2 target)
+    {
+        Debug.Log("in isValidAttack");
+        if (inMoveState == true)
+        {
+            Debug.Log("In Move State, returning false.");
+            return false;
+        }
+
+        GameObject obj = GetTile(target);
+        if (obj == null)
+        {
+            Debug.Log("No associated object, returning false.");
+            return false;
+        }
+
+        TileData tile = obj.GetComponent<TileData>();
+        Debug.Log("Checking to see if there's something to attack.");
+        return tile.ContainsAttackableObject();
+    }
+
+    public static IAttackableObject getTileDefender(Vector2 target)
     {
         GameObject obj = GetTile(target);
         if (obj == null)
         {
-            return false;
+            Debug.Log("No associated object, returning null.");
+            return null;
         }
         TileData tile = obj.GetComponent<TileData>();
-        if (tile != null && tile.movementSpeedMultiplier != 0)
-        {
-            return true;
-        }
-        //TODO Other conditions, like another creature in this tile?
-        return false;
+        return tile.GetAttackableObject();
     }
 
-    /*  public static void AddLightSource(LightSource l)
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-
-        lightSources.Add(l);
-    }
-
-    public static List<LightSource> GetLightSources()
-    {
-        if (lightSources == null)
-        {
-            lightSources = new List<LightSource>();
-        }
-        return lightSources;
-    }*/
 
     public static void SetTile(int x, int y, GameObject td)
     {

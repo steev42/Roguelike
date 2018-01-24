@@ -16,9 +16,16 @@ public class Initialize : MonoBehaviour
 
     public Texture2D mapImage;
 
+    bool isInitialized = false;
+
     // Use this for initialization
-    void Start()
+    void Update()
     {
+
+        if (isInitialized)
+            return;
+
+        isInitialized = true;
 
         GameObject tile_holder = new GameObject();
         tile_holder.name = "Tiles";
@@ -43,28 +50,31 @@ public class Initialize : MonoBehaviour
         player_sr.sortingLayerName = "Units";
         UpdateCharacterSpriteLocation scr = player_go.AddComponent<UpdateCharacterSpriteLocation>();
         scr.cd = cd;
-        LightSource l = player_go.AddComponent<LightSource>();
+        LightSource l = player_go.AddComponent<LightSource>();  // TODO Eventually mapped to an inventory object rather than character.
         l.UpdateIntensity(16.0f);
         
         GameData.MapCharacterToObject(cd, player_go);
+        //GameData.GetTile(cd.location).GetComponent<TileData>().JoinTile(cd);
 
        
+        // Create a target dummy for testing purposes...
 
-
-        /*    CharacterData nuper_data = new CharacterData(new Vector2(5, 5)); 
+        CharacterData nuper_data = new CharacterData(new Vector2(12, 12)); 
 
         GameObject nuper_go = new GameObject();
-        nuper_go.name = "Test Nuper";
+        nuper_go.name = "Target Dummy (10)";
         //nuper_go.transform.position = new Vector2 (5, 5);
-        AI_Critter ai = nuper_go.AddComponent<AI_Critter>();
+        AI_TargetDummy ai = nuper_go.AddComponent<AI_TargetDummy>();
         ai.Character = nuper_data;
         SpriteRenderer nuper_sr = nuper_go.AddComponent<SpriteRenderer>();
         nuper_sr.color = Color.magenta;
         nuper_sr.sprite = nuper_sprite;
+        nuper_sr.sortingLayerName = "Units";
         UpdateCharacterSpriteLocation nscr = nuper_go.AddComponent<UpdateCharacterSpriteLocation>();
         nscr.cd = nuper_data;
 
         GameData.MapCharacterToObject(nuper_data, nuper_go);
-*/
+        //GameData.GetTile(nuper_data.location).GetComponent<TileData>().JoinTile(nuper_data);
+
     }
 }

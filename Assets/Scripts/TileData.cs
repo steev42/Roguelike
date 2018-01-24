@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileData : MonoBehaviour
 {
+    // TODO Split renderer from data?
     public float movementSpeedMultiplier = 1.0f;
 	
     public Color originalColor;
@@ -13,11 +14,81 @@ public class TileData : MonoBehaviour
     public float totalLight;
 
     private bool needsUpdate = true;
+    private List<IPhysicalObject> tileContents;
 
     void Start()
     {
         lightLevel = new Dictionary<LightSource, float>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+        tileContents = new List<IPhysicalObject>();
+    }
+
+    public bool isTileLockedTo(IPhysicalObject o)
+    {
+        if (tileContents != null)
+        {
+            foreach (IPhysicalObject content in tileContents)
+            {
+                Debug.Log("Examining " + content.ToString());
+                if (content.isLockedTo(o))
+                {
+                    Debug.Log("Tile locked due to presence of " + content.ToString());
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public bool JoinTile(IPhysicalObject o)
+    {
+        Debug.Log("Called JoinTile");
+        if (tileContents != null)
+        {
+            Debug.Log("Tile contains " + tileContents.Count + " objects.");
+            foreach (IPhysicalObject content in tileContents)
+            {
+                Debug.Log("Looking at " + content.ToString());
+                if (content.isLockedTo(o))
+                {
+                    Debug.Log("Tile is occupied.");
+                    return false;
+                }
+            }
+
+            tileContents.Add(o);
+            Debug.Log("Successfully joined tile. Now contains " + tileContents.Count);
+            return true;
+        }
+
+        Debug.Log("tileContents are null");
+        return false;
+    }
+
+    public void LeaveTile(IPhysicalObject o)
+    {
+        Debug.Log("Calling LeaveTile");
+        if (tileContents != null)
+            tileContents.Remove(o);
+    }
+
+    public bool ContainsAttackableObject()
+    {
+        return (GetAttackableObject() != null);
+    }
+
+    public IAttackableObject GetAttackableObject()
+    {
+        foreach (IPhysicalObject content in tileContents)
+        {
+            if (content is IAttackableObject)
+            {
+                return (IAttackableObject) content;
+            }
+            Debug.Log(content.ToString() + " isn't able to be attacked.");
+        }
+        return null;
     }
 
     public float GetLightLevel(LightSource l)
@@ -35,7 +106,7 @@ public class TileData : MonoBehaviour
     public float GetTotalLightLevel()
     {
         float total = 0f;
-        foreach (LightSource l in lightLevel.Keys)
+        foreach (LightSource l in lightLevel.Keys) 
         {
             total += lightLevel[l];
         }
@@ -45,6 +116,9 @@ public class TileData : MonoBehaviour
 
     void Update()
     {
+        if (this.name == "Tile_12_12" && Time.deltaTime % 100 == 0)
+            Debug.Log(tileContents.Count);
+        
         if (mySpriteRenderer == null)
             return;
 
@@ -58,7 +132,7 @@ public class TileData : MonoBehaviour
         }
         else  // In line of sight.  Update based on lighting.
         {
-            float minLight = GameData.GetActiveCharacter().minimumLightToSee;
+            float minLight = GameData.GetActiveCharacter().GetAttribute(CharacterAttributes.MIN_LIGHT_FOR_SIGHT);
             float maxLight = GameData.DEFAULT_LIGHT;
 
             float total = GetTotalLightLevel();

@@ -24,7 +24,7 @@ public class AI_Critter : AI
                     continue; // A no-move, don't consider it.   
                 }
 
-                if (GameData.isValidMove(Character.location + pos))
+                if (GameData.isValidMove(Character, Character.location + pos))
                 {
                     directions.Add(pos);
                 }

@@ -89,7 +89,7 @@ public class LightSource : MonoBehaviour
             Vector2 neighborFinalPosition = v;
             if (currentLighting.ContainsKey(neighborFinalPosition))
             {
-                if (firstDebugOfUpdate) Debug.Log("Neighbor at " + v.ToString() + " has lighting of " + currentLighting[neighborFinalPosition] * GetDistanceFromSource(v) * GetDistanceFromSource(v));
+               // if (firstDebugOfUpdate) Debug.Log("Neighbor at " + v.ToString() + " has lighting of " + currentLighting[neighborFinalPosition] * GetDistanceFromSource(v) * GetDistanceFromSource(v));
                 totalNeighborLight += (currentLighting[neighborFinalPosition] * GetDistanceFromSource(v) * GetDistanceFromSource (v));
             }
         }
@@ -123,7 +123,7 @@ public class LightSource : MonoBehaviour
     private void UpdateLightingLevels()
     {
         // Division by 4 doubles the range; this allows for lighting overlaps.
-        float minLightToConsider = GameData.GetActiveCharacter().minimumLightToSee / 4; 
+        float minLightToConsider = GameData.GetActiveCharacter().GetAttribute(CharacterAttributes.MIN_LIGHT_FOR_SIGHT) / 4; 
         int maxRange = (int)(Mathf.Sqrt(lightIntensity / minLightToConsider));
 
         // Set inner 9 squares.
@@ -203,7 +203,7 @@ public class LightSource : MonoBehaviour
 
         foreach (Vector2 v in previouslyLitTiles)
         {
-            Debug.Log("Clearing lighting from " + v + "because it is no longer lit.");
+            //Debug.Log("Clearing lighting from " + v + "because it is no longer lit.");
             GameObject td_obj = GameData.GetTile(v);
             if (td_obj != null)
             {
@@ -213,7 +213,7 @@ public class LightSource : MonoBehaviour
         }
         previouslyLitTiles.Clear();
         previouslyLitTiles.AddRange(currentLighting.Keys);
-        Debug.Log("Currently lighting " + previouslyLitTiles.Count + " tiles.");
+        //Debug.Log("Currently lighting " + previouslyLitTiles.Count + " tiles.");
     }
 
 
