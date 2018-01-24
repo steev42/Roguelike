@@ -75,16 +75,20 @@ public class TileData : MonoBehaviour
 
     public bool ContainsAttackableObject()
     {
+        return (GetAttackableObject() != null);
+    }
+
+    public IAttackableObject GetAttackableObject()
+    {
         foreach (IPhysicalObject content in tileContents)
         {
             if (content is IAttackableObject)
             {
-                Debug.Log("Found something to attack.");
-                return true;
+                return (IAttackableObject) content;
             }
             Debug.Log(content.ToString() + " isn't able to be attacked.");
         }
-        return false;
+        return null;
     }
 
     public float GetLightLevel(LightSource l)

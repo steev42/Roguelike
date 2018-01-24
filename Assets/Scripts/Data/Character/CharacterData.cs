@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,11 +47,6 @@ public class CharacterData : IAttackableObject
         return attributes.GetAttribute(s);
     }
 
-    public int GetAttributeAsInteger (string s)
-    {
-        return attributes.GetAttributeInteger(s);
-    }
-
     public bool isLockedTo(IPhysicalObject o)
     {
         if (o is CharacterData)
@@ -58,5 +54,26 @@ public class CharacterData : IAttackableObject
             return true; // Only one character can be in a tile at a time.
         }
         return false; // But they don't lock anything else right now.
+    }
+
+    public float GetAttribute(string s, bool defense)
+    {
+        if (defense == false)
+            return GetAttribute(s);
+        //TODO Figure out armor
+        return GetAttribute(s);
+    }
+
+    public int GetAttributeInteger(string s, bool defense)
+    {
+        if (defense == false)
+            return GetAttributeInteger(s);
+        //TODO Figure out armor
+        return GetAttributeInteger(s);
+    }
+
+    public int GetAttributeInteger(string s)
+    {
+        return attributes.GetAttributeInteger(s);
     }
 }

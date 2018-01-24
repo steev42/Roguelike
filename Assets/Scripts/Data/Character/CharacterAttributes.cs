@@ -66,7 +66,10 @@ public class CharacterAttributes
         {
             stats = new Dictionary<string, CharacterStat>();
         }
-        stats[s].SetAttribute(v);
+        if (stats.ContainsKey(s) == false)
+            stats[s] = new CharacterStat(s, v);
+        else
+            stats[s].SetAttribute(v);
     }
 
     private CharacterStat RandomizeAttribute(string s)
@@ -83,7 +86,8 @@ public class CharacterAttributes
         }
         else
         {
-            return -1;
+            return -1; // TODO is the proper value?  Are we sure all attributes will be positive?
+            // In practice, should probably instead throw an exception.
         }
     }
 

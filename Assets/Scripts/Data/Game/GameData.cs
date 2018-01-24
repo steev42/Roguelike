@@ -5,6 +5,10 @@ using UnityEngine;
 public class GameData
 {
     public const float DEFAULT_LIGHT = 4.0f;
+    public const float BASE_HIT_CHANCE = 0.8f;
+    public const float HIT_DIMINISHMENT_FACTOR = 2.0f;
+    public const float DAMAGE_DIMINISHMENT_FACTOR = 2.0f;
+    public const int DEFAULT_ATTRIBUTE_SCORE = 10;
 
     static Dictionary <Vector2, GameObject> tileMap;
 
@@ -79,6 +83,18 @@ public class GameData
         TileData tile = obj.GetComponent<TileData>();
         Debug.Log("Checking to see if there's something to attack.");
         return tile.ContainsAttackableObject();
+    }
+
+    public static IAttackableObject getTileDefender(Vector2 target)
+    {
+        GameObject obj = GetTile(target);
+        if (obj == null)
+        {
+            Debug.Log("No associated object, returning null.");
+            return null;
+        }
+        TileData tile = obj.GetComponent<TileData>();
+        return tile.GetAttackableObject();
     }
 
 

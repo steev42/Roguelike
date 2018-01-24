@@ -16,8 +16,14 @@ public class RollData
 
     public int Roll()
     {
-        // TODO
-        return 0;
+        int total = 0;
+        for (int i = 1; i <= numberOfRolls; i++)
+        {
+            int roll = Random.Range(minRoll, maxRoll);
+            Debug.Log("Roll " + i + ": " + roll);
+            total += roll;
+        }
+        return total;
     }
 
 
