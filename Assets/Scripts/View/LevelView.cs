@@ -13,12 +13,12 @@ public class LevelView : RogueElement
     private AbstractMapLevel level;
     public AbstractMapLevel Map { set { level = value; } }
 
-    private Dictionary<Vector2, bool> visibilityUpdates;
+    private Dictionary<Vector2, float> visibilityUpdates;
     private Dictionary<Vector2, GameObject> displayedTiles;
 
     void Start()
     {
-        visibilityUpdates = new Dictionary<Vector2, bool>();
+        visibilityUpdates = new Dictionary<Vector2, float>();
         displayedTiles = new Dictionary<Vector2, GameObject>();
     }
 
@@ -35,7 +35,7 @@ public class LevelView : RogueElement
                 }
                 Sprite s = floorSprite;
 
-                if (true == visibilityUpdates[loc])
+                if (visibilityUpdates[loc] > 0)
                 {
                     List<IPhysicalObject> objs = level.mapData[loc].GetContents();
                     foreach (IPhysicalObject obj in objs)
@@ -87,9 +87,9 @@ public class LevelView : RogueElement
         }
     }
 
-    public void UpdateVisibility(Vector2 loc, bool isVisible)
+    public void UpdateVisibility(Vector2 loc, float visibility)
     {
-        visibilityUpdates[loc] = isVisible;
+        visibilityUpdates[loc] = visibility;
     }
 
 

@@ -54,7 +54,7 @@ public class BitImageMapLevel : AbstractMapLevel
             {
                 for (int y = 0; y < tex.height; y++)
                 {
-                    LocationData ld = new LocationData(x,y);
+                    LocationData ld = new LocationData(x,y, this);
 
                     if (pixels[(y * tex.width) + x].Equals(new Color32(0, 0, 0, 255)))
                     {

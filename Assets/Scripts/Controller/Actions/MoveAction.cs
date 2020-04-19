@@ -31,7 +31,7 @@ public class MoveAction : ICharacterAction
         Debug.Log("Performing action : " + description + "; Move to " + targetLocation.ToString());
         if (true) //GameData.isValidMove(character, targetLocation))
         {
-            character.UpdateLocation(targetLocation);
+            //TODO character.UpdateLocation(targetLocation);
             Debug.Log("Character set to " + targetLocation.ToString());
             //character.obj.transform.position = targetLocation;
         }

@@ -41,7 +41,7 @@ public class Initialize : MonoBehaviour
         mli.wall_sprite = wall_sprite;
         mli.mapImage = mapImage;*/
 
-        CharacterData cd = new CharacterData(new Vector2(15, 16));
+        //CharacterData cd = new CharacterData(new Vector2(15, 16));
 
       /*  GameObject player_go = new GameObject();
         player_go.name = "Player";

@@ -13,8 +13,21 @@ public class CharacterData : IAttackableObject
     private CharacterAttributes attributes;
     private string characterName;
     public string type;
+    LocationData ld;
+    private List<IAttachable> attachments;
 
     public string Name { get { return characterName; } set { characterName = value; } }
+
+    public Vector2 Location { get { return location; } }
+
+    public LocationData LocationData { get { return ld; } 
+        set { 
+            ld = value;
+            location = ld.Location;
+            } 
+        }
+
+    public List<IAttachable> AttachedItems { get { return attachments; } }
 
     public CharacterData()
     {
@@ -22,35 +35,13 @@ public class CharacterData : IAttackableObject
         type = "Player";
     }
 
-    public CharacterData(Vector2 loc)
+    public CharacterData(LocationData loc)
     {
-        location = loc;
+        LocationData = loc;
         attributes = CharacterAttributes.PCAttributes();
         type = "Player";
         //UpdateLocation(loc);
         
-    }
-
-    public void UpdateLocation(Vector2 loc)
-    {
-
-      /*  if (GameData.GetTile(loc) == null || GameData.GetTile(loc).GetComponent<TileDataOriginal>() == null)
-        {
-            Debug.LogWarning("Updating location to null tile?");
-            return;
-        }   
-
-        if (GameData.GetTile(loc).GetComponent<TileDataOriginal>().JoinTile(this) && loc != location)
-        {
-            GameData.GetTile(location).GetComponent<TileDataOriginal>().LeaveTile(this);
-            location = loc;
-
-        }
-        else
-        {
-            Debug.LogWarning("Unable to move into " + loc + ".  Tile locked.");
-        }*/
-        //temp.location = loc;
     }
 
     public float GetAttribute(string s)
@@ -86,5 +77,31 @@ public class CharacterData : IAttackableObject
     public int GetAttributeInteger(string s)
     {
         return attributes.GetAttributeInteger(s);
+    }
+
+    public void Attach(IAttachable a)
+    {
+        if (attachments == null)
+            attachments = new List<IAttachable>();
+
+        if (attachments.Contains(a))
+            return;
+
+        attachments.Add(a);
+    }
+
+    public bool isDetectableByCharacter(CharacterData cd, SenseEnum sense = SenseEnum.VISION)
+    {
+        float visibility = LocationData.GetTotalSenseLevel(sense);
+        if (visibility > 0)
+        {
+            Debug.Log(characterName + " is detectable");
+
+            return true;
+        }
+
+        Debug.Log(characterName + " is not detectable");
+
+        return false;
     }
 }

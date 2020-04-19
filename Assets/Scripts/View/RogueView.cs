@@ -9,6 +9,7 @@ public class RogueView : RogueElement
 
     public Sprite playerSprite;
     public Sprite nuperSprite;
+    public Sprite wallSprite;
 
     public Dictionary<IObject, GameObject> displayedObjects;
 
@@ -55,9 +56,9 @@ public class RogueView : RogueElement
         flaggedForUpdate.Clear();
     }
 
-    public void DisplayObject(IObject o, bool show = true)
+    public void DisplayObject(IObject o, float visibility)
     {
-        if (show)
+        if (visibility > 0)
         {
             flaggedForUpdate.Add(o);
         }
@@ -71,6 +72,7 @@ public class RogueView : RogueElement
             }
         }
     }
+
     private void AddEnemy(CharacterData cd)
     {
         GameObject go = new GameObject();

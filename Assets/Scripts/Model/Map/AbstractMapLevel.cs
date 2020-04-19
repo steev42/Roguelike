@@ -15,6 +15,15 @@ public abstract class AbstractMapLevel
 
     private Dictionary<Vector2, LocationData> data = new Dictionary<Vector2, LocationData>();
     public Dictionary<Vector2, LocationData> mapData { get { return data; } }
+
+    public LocationData GetLocation(Vector2 coord)
+    {
+        if (data.ContainsKey(coord))
+            return data[coord];
+        else
+            return null;
+    }
+
     public abstract int Width { get; }
     public abstract int Height { get; }
 }
