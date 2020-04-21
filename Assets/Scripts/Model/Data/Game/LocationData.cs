@@ -77,10 +77,10 @@ public class LocationData
 
     public bool JoinTile(IPhysicalObject o)
     {
-        //Debug.Log("Called JoinTile");
+        Debug.Log("Called JoinTile");
         if (physicalObjects != null)
         {
-            //Debug.Log("Tile contains " + physicalObjects.Count + " objects.");
+            Debug.Log("Tile contains " + physicalObjects.Count + " objects.");
             foreach (IPhysicalObject content in physicalObjects)
             {
                // Debug.Log("Looking at " + content.ToString());
@@ -94,7 +94,7 @@ public class LocationData
             physicalObjects.Add(o);
             o.LocationData = this;
             SendUpdateNotification();
-            //Debug.Log("Successfully joined tile. Now contains " + physicalObjects.Count);
+            Debug.Log("Successfully joined tile. Now contains " + physicalObjects.Count);
             return true;
         }
 
@@ -174,15 +174,15 @@ public class LocationData
         if (senseAbsorption.ContainsKey(Sense.GetSense(source)))
             passedIntensity = (intensity * senseAbsorption[Sense.GetSense(source)]);
 
-        map.GetLocation(new Vector2(Location.x - 1, Location.y)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x + 1, Location.y)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x, Location.y - 1)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x, Location.y + 1)).ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x - 1, Location.y))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x + 1, Location.y))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x, Location.y - 1))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x, Location.y + 1))?.ExpandSenseSource(source, passedIntensity, this);
 
-        map.GetLocation(new Vector2(Location.x - 1, Location.y - 1)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x + 1, Location.y - 1)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x + 1, Location.y - 1)).ExpandSenseSource(source, passedIntensity, this);
-        map.GetLocation(new Vector2(Location.x - 1, Location.y + 1)).ExpandSenseSource(source, passedIntensity, this);        
+        /*map.GetLocation(new Vector2(Location.x - 1, Location.y - 1))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x + 1, Location.y - 1))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x + 1, Location.y - 1))?.ExpandSenseSource(source, passedIntensity, this);
+        map.GetLocation(new Vector2(Location.x - 1, Location.y + 1))?.ExpandSenseSource(source, passedIntensity, this);  */     
     }
 
 
@@ -220,13 +220,13 @@ public class LocationData
         }
         if (expansionYNeighbor.ContainsKey(source))
         {
-            float YDist = Vector2.Distance(source.Location, expansionXNeighbor[source].Location);
+            float YDist = Vector2.Distance(source.Location, expansionYNeighbor[source].Location);
             totalIntensity += (intensity * YDist * YDist);
             neighbors++;
         }
         if (expansionXYNeighbor.ContainsKey(source))
         {
-            float XYDist = Vector2.Distance(source.Location, expansionXNeighbor[source].Location);
+            float XYDist = Vector2.Distance(source.Location, expansionXYNeighbor[source].Location);
             totalIntensity += (intensity * XYDist * XYDist);
             neighbors++;
         }
@@ -276,9 +276,9 @@ public class LocationData
             int xDir = ((Location.x - source.Location.x) < 0 ? -1 : 1);
             int yDir = ((Location.y - source.Location.y) < 0 ? -1 : 1);
 
-            map.GetLocation(new Vector2(Location.x + xDir, Location.y)).ExpandSenseSource(source, passedIntensity, this);
-            map.GetLocation(new Vector2(Location.x + xDir, Location.y + yDir)).ExpandSenseSource(source, passedIntensity, this);
-            map.GetLocation(new Vector2(Location.x, Location.y + yDir)).ExpandSenseSource(source, passedIntensity, this);
+            map.GetLocation(new Vector2(Location.x + xDir, Location.y))?.ExpandSenseSource(source, passedIntensity, this);
+            map.GetLocation(new Vector2(Location.x + xDir, Location.y + yDir))?.ExpandSenseSource(source, passedIntensity, this);
+            map.GetLocation(new Vector2(Location.x, Location.y + yDir))?.ExpandSenseSource(source, passedIntensity, this);
         }
     }
 

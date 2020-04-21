@@ -38,6 +38,7 @@ public class CharacterData : IAttackableObject
     public CharacterData(LocationData loc)
     {
         LocationData = loc;
+        loc.JoinTile(this);
         attributes = CharacterAttributes.PCAttributes();
         type = "Player";
         //UpdateLocation(loc);
