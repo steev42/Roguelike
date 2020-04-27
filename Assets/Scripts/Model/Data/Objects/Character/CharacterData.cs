@@ -89,6 +89,7 @@ public class CharacterData : IAttackableObject
             return;
 
         attachments.Add(a);
+        a.Location = Location;
     }
 
     public bool isDetectableByCharacter(CharacterData cd, SenseEnum sense = SenseEnum.VISION)
@@ -96,12 +97,12 @@ public class CharacterData : IAttackableObject
         float visibility = LocationData.GetTotalSenseLevel(sense);
         if (visibility > 0)
         {
-            Debug.Log(characterName + " is detectable");
+            //Debug.Log(characterName + " is detectable");
 
             return true;
         }
 
-        Debug.Log(characterName + " is not detectable");
+        //Debug.Log(characterName + " is not detectable");
 
         return false;
     }

@@ -7,5 +7,5 @@ using UnityEngine;
 
     public interface IAttachable
     {
-    void LocationUpdated(Vector2 newLocation);
+    Vector2 Location { get; set; }
     }

@@ -89,7 +89,8 @@ public class LevelView : RogueElement
 
     public void UpdateVisibility(Vector2 loc, float visibility)
     {
-        visibilityUpdates[loc] = visibility;
+        if (visibility > 0)
+            visibilityUpdates[loc] = visibility;
     }
 
 

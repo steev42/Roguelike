@@ -7,6 +7,9 @@ using UnityEngine;
 
 public interface ISenseProperty : IProperty
 {
-    Vector2 Location { get; }
+    SenseEnum Sense { get; }
+    bool NeedsUpdate { get; }
+
+    Vector2 UpdatedAt { get; set; }
 }
 

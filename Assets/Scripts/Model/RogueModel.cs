@@ -28,7 +28,7 @@ public class RogueModel : RogueElement
 
         objectsOnMap = new List<IObject>();
         // Initialize Character Data
-        CharacterData cd = new CharacterData(map.GetLocation(new Vector2(15,16)));
+        CharacterData cd = new CharacterData(map.GetLocation(new Vector2(13,13)));
         cd.Name = "Player";
         objectsOnMap.Add(cd);
         activeCharacter = cd;
@@ -49,29 +49,33 @@ public class RogueModel : RogueElement
         // Based on the current sense, find any objects that apply to that sense and set their range on the map.
         if (activeSense == SenseEnum.VISION)
         {
-            if (firstPass)Debug.Log("There are " + objectsOnMap.Count + " objects on the map.");
+            //if (firstPass)Debug.Log("There are " + objectsOnMap.Count + " objects on the map.");
             foreach (IObject obj in objectsOnMap)
             {
                 if (obj is IlluminatedObject)
                 {
-                    if (firstPass) Debug.Log("Object is Illuminated.");
+                    //if (firstPass) Debug.Log("Object is Illuminated.");
                     IlluminatedObject io = (IlluminatedObject)obj;
-                    map.GetLocation(obj.Location).AddSenseSource(io, io.Intensity);
+                    if (io.NeedsUpdate)
+                        map.GetLocation(obj.Location).AddSenseSource(io, io.Intensity, true);
                 }
 
-                /*THIS SECTION IS CAUSING A LOCK CONDITION
-                 * 
-                 * if (obj.AttachedItems != null)
+                if (obj.AttachedItems != null)
                 {
                     foreach (IAttachable a in obj.AttachedItems)
                     {
                         if (a is IlluminatedObject)
                         {
                             IlluminatedObject io = (IlluminatedObject)a;
-                            map.GetLocation(obj.Location).AddSenseSource(io, io.Intensity);
+                            if (io.NeedsUpdate)
+                            {
+                                //Debug.Log("Would call AddSenseSource");
+                                //io.UpdatedAt = io.Location;
+                                map.GetLocation(obj.Location)?.AddSenseSource(io, io.Intensity, true);
+                            }
                         }
                     }
-                }*/
+                }
             }
         }
         
@@ -101,6 +105,7 @@ public class RogueModel : RogueElement
                     //if (firstPass) Debug.Log("Checking for diplay of " + coord.ToString());
                     LocationData thisLoc = map.GetLocation(coord);
                     float senseTotal = thisLoc.GetTotalSenseLevel(activeSense);
+                    //if (firstPass) Debug.Log("Coordinate " + coord.ToString() + " has visibility of " + senseTotal);
                     app.view.level.UpdateVisibility(coord, senseTotal);
                     foreach (IPhysicalObject o in thisLoc.GetContents())
                     {

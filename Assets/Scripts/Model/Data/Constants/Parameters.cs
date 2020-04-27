@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 static class Parameters
 {
-    public const float ABSOLUTE_MINIMUM_SENSE = 1/256;
+    public const float ABSOLUTE_MINIMUM_SENSE = 1f / 256f;
     public const float DEFAULT_LIGHT = 4.0f;
     public const float BASE_HIT_CHANCE = 0.8f;
     public const float HIT_DIMINISHMENT_FACTOR = 2.0f;
